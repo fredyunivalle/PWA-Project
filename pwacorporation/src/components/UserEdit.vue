@@ -1,0 +1,97 @@
+<template>
+    <v-dialog
+    :value="value" @input="$emit('input', $event)"
+    max-width="700px"
+    persistent
+    >
+    <v-card>
+        <v-card-title>
+        <span class="text-h5"> Editar usuario</span>
+        </v-card-title>
+        <v-card-text>
+        <v-container>
+            <v-row>
+            <v-col cols="12">
+                <v-text-field v-model="name" label = "Nombre completo" filled> </v-text-field>
+            </v-col>
+            </v-row>
+            <v-row>
+            <v-col cols="12">
+                <v-text-field v-model="email" label = "Email" filled> </v-text-field>
+            </v-col>
+            </v-row>
+            <v-row>
+            <v-col cols="12">
+                <v-text-field v-model="password" label = "Contraseña" type = "password" filled> </v-text-field>
+            </v-col>
+            </v-row>
+            <v-row>
+            <v-col cols="12" sm="6" md="6">
+                <v-text-field v-model="phone" label = "Teléfono" type="number" min="0" filled> </v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="6">
+                <v-text-field v-model="identification" label = "Cédula" type="number" min="0" filled> </v-text-field>
+            </v-col>
+            </v-row>
+
+        </v-container>
+        </v-card-text>
+        <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+            color="blue darken-1"
+            text
+            @click="closeDialogs"
+        >
+            Cerrar
+        </v-btn>
+        <v-btn
+            color="blue darken-1"
+            text
+            @click="editUser"
+        >
+            Guardar
+        </v-btn>
+        </v-card-actions>
+    </v-card>
+    </v-dialog>
+</template>
+
+<script>
+import axios from 'axios';
+export default {
+   name: 'UserEdit',
+   props:['value'],
+   data(){
+     return{
+       id: '',
+       name: '',
+       email: '',
+       password: '',
+       phone: '',
+       identification: ''
+     }
+   },
+   methods:{
+    register(){
+        let json = {
+          "name" : this.name,  
+          "email" : this.email,
+          "password": this.password,
+          "phone": this.phone,
+          "identification": this.identification
+        };
+        axios.post('http://localhost:4000/users', json);
+        this.closeDialogs();
+    },
+    closeDialogs(){
+        this.name = "";
+        this.email = "";
+        this.password = "";
+        this.phone = "";
+        this.identification = "";
+        this.$emit('closeDialogs')
+    }
+   },
+}
+</script>
