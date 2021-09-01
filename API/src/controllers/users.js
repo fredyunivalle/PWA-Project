@@ -35,24 +35,25 @@ const getUserById = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-    const { name, email, password, phone, identification} = req.body;
+    const { name, email, password, phone, identification, position} = req.body;
     
-    const response = await pool.query('INSERT INTO Users (name, email, password, phone, identification) VALUES ($1, $2, $3, $4, $5)', [name, email, password, phone, identification]);
+    const response = await pool.query('INSERT INTO Users (name, email, password, phone, identification, position) VALUES ($1, $2, $3, $4, $5, $6)', [name, email, password, phone, identification, position]);
     res.json({
         message: 'User Added successfully',
         body: {
-            user: {name, email, phone, identification}
+            user: {name, email, phone, identification, position}
         }
     })
 };
 
 const updateUser = async (req, res) => {
     const id = parseInt(req.params.id);
-    const { name, email } = req.body;
+    const { email, phone, position} = req.body;
 
-    const response =await pool.query('UPDATE Users SET name = $1, email = $2 WHERE id = $3', [
-        name,
+    const response =await pool.query('UPDATE Users SET email = $1, phone = $2, position = $3 WHERE id = $4', [
         email,
+        phone,
+        position,
         id
     ]);
     res.json('User Updated Successfully');

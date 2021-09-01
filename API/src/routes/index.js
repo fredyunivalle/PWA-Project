@@ -18,7 +18,8 @@ const {getUsers, getUserById, createUser, updateUser, deleteUser, login} = requi
 const {getClients, createClient, updateClient, getNaturalClients, getLegalClients} = require('../controllers/clients.js');
 const {getProjects, createProject, updateProject, deleteProject} = require ('../controllers/projects.js'); 
 const {getTasks, createTask, updateTask, deleteTask} = require ('../controllers/tasks.js'); 
-const {getImages, uploadImage, deleteImage} = require ('../controllers/images.js'); 
+const {getImages, uploadImage, deleteImage} = require ('../controllers/images.js');
+const { getAudios, uploadAudio,deleteAudio } = require('../controllers/audios.js');
 
 router.get('/users', getUsers);
 router.get('/users/:id', getUserById);
@@ -48,5 +49,9 @@ router.delete('/projects/tasks/:id', deleteTask);
 router.get('/projects/tasks/images/:id', getImages);
 router.post('/projects/tasks/images/:id', upload.single('image'), uploadImage);
 router.delete('/projects/tasks/images/:id', deleteImage);
+
+router.get('/projects/tasks/audios/:id', getAudios);
+router.post('/projects/tasks/audios/:id', upload.single('audio'), uploadAudio);
+router.delete('/projects/tasks/audios/:id', deleteAudio);
 
 module.exports = router;

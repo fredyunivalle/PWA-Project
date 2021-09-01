@@ -39,8 +39,8 @@
                 <v-icon>mdi-close</v-icon>
                 </v-btn>
             </template>
-            </v-list-item>   
-        </v-list> 
+            </v-list-item>
+        
 
         <v-file-input 
             label="Añadir imagen"
@@ -50,17 +50,52 @@
             @change="uploadImage($event)"
             >
         </v-file-input>
+
+        <v-card-text>Audio:</v-card-text>
+            <v-list-item
+            v-for="(audio, i) in audios"
+                :key="'A'+ i">
+                <audio controls
+                    :src="'http://localhost:4000/' + audio.path">
+                ></audio>
+                <template>
+                <v-btn
+                color="red"
+                fab
+                dark
+                small
+                absolute
+                top
+                right
+                @click="deleteAudio(audio.pk_id)"
+                >
+                <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </template>
+            </v-list-item>
+        </v-list>
+
+        <v-file-input 
+            label="Añadir audio"
+            outlined
+            dense
+            small-ships
+            @change="uploadSound($event)"
+            >
+        </v-file-input>
     </v-card>
 </template>
 
 <script>
 import axios from 'axios';
+
 export default {
    name: 'Task',
    props: ['taskInfo'],
    data(){
      return{
        images: [],
+       audios: [],
        name: this.taskInfo.name,
        description: this.taskInfo.description,
        completed: this.taskInfo.completed,
@@ -70,11 +105,22 @@ export default {
        selectedFile: null
      }
    },
+   
    methods:{
     fetchImages() {
       axios.get("http://localhost:4000/projects/tasks/images/" + this.taskId).then(
         response => {
           this.images = response.data;
+        },
+        error => {
+          console.log(error);
+        }
+      );
+    },
+    fetchAudios() {
+      axios.get("http://localhost:4000/projects/tasks/audios/" + this.taskId).then(
+        response => {
+          this.audios = response.data;
         },
         error => {
           console.log(error);
@@ -112,6 +158,22 @@ export default {
       );
         
     },
+    uploadSound(){
+        this.selectedFile = event.target.files[0];
+        const fd = new FormData();
+        fd.append('audio', this.selectedFile, this.selectedFile.name);
+        axios.post("http://localhost:4000/projects/tasks/audios/" + this.taskId, fd).then(
+            response => {
+          this.selectedFile = null;
+            this.fetchAudios();
+        },
+        error => {
+          console.log(error);
+        }
+      );
+        
+    },
+    
     getPath(path){
            console.log("http://localhost:4000/" + path);
            return "http://localhost:4000/" + path;
@@ -128,9 +190,22 @@ export default {
         }
       );
     },
+    deleteAudio(id)
+    {
+        axios.delete("http://localhost:4000/projects/tasks/audios/" + id).then(
+            response => {
+          this.selectedFile = null;
+            this.fetchAudios();
+        },
+        error => {
+          console.log(error);
+        }
+      );
+    },
    },
     beforeMount(){
         this.fetchImages();
+        this.fetchAudios();
     }
 }
 </script>

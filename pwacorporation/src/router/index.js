@@ -6,6 +6,7 @@ import Login from '../views/Login.vue'
 import Users from '../views/Users.vue'
 import Clients from '../views/Clients.vue'
 import Projects from '../views/Projects.vue'
+import Reports from '../views/Reports.vue'
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,10 @@ const routes = [
   {
     path: '/project',
     component: Projects
+  },
+  {
+    path: '/reports',
+    component: Reports
   },
   {
     path: '*',

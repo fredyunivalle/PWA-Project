@@ -8,7 +8,7 @@
               Application
             </v-list-item-title>
             <v-list-item-subtitle>
-              subtext
+              PWA corporation
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -55,6 +55,7 @@
           { title: 'Users', icon: 'mdi-account-tie', path: '/users' },
           { title: 'Clients', icon: 'mdi-account-circle', path: '/client' },
           { title: 'Projects', icon: 'mdi-anchor', path: '/project' },
+          { title: 'Reports', icon: 'mdi-chart-bar', path: '/reports' },
         ],
         right: null,
       }

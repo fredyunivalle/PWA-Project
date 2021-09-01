@@ -9,8 +9,6 @@ import VueAxios from 'vue-axios'
 
 Vue.config.productionTip = false
 
-
-
 new Vue({
   router,
   vuetify,

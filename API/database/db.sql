@@ -33,6 +33,7 @@ CREATE TABLE Tasks(
     pk_task_id SERIAL PRIMARY KEY,
     name VARCHAR(40),
     description TEXT,
+    fk_project_id INT,
     FOREIGN KEY (fk_project_id) REFERENCES Projects(pk_project_id),
     completed BOOLEAN
 

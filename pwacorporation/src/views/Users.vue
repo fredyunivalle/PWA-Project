@@ -30,8 +30,15 @@
                                 <td>{{ user.email }}</td>
                                 <td><v-btn @click="openEditDialog(user)">
                                  <v-icon>mdi-pencil</v-icon>
-                               </v-btn></td>
+                               </v-btn>
+                               
+                               <v-btn @click="openDeleteDialog(user)">
+                                 <v-icon>mdi-cancel</v-icon>
+                                </v-btn>
+                               
+                               </td>
                                 </tr>
+                                
                             </tbody>
                             </template>
                         </v-simple-table>
@@ -54,6 +61,41 @@
                          </template>
 
 
+                  <template>
+                    <v-row justify="center">
+                      <v-dialog
+                        v-model="dialogDelete"
+                        persistent
+                        max-width="290"
+                      >
+                      <v-card>
+                        <v-card-title class="text-h5">
+                          ¿Desea eliminar este usuario?
+                        </v-card-title>
+                        <v-text-field v-model="name"  filled disabled> </v-text-field>
+                        <v-card-text>Una vez eliminado el usuario no podrá recuperarse la informacion</v-card-text>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                              <v-btn
+                                color="green darken-1"
+                                text
+                                @click="closeDialogs"
+                              >
+                                Cancelar
+                              </v-btn>
+                              <v-btn
+                                color="green darken-1"
+                                text
+                                @click="deleteUser"
+                              >
+                                Seguir
+                              </v-btn>
+                          </v-card-actions>
+                      </v-card>
+                      </v-dialog>
+                    </v-row>
+                  </template>
+
                        <template>
                          <v-dialog
                           v-model="editDialog"
@@ -68,7 +110,7 @@
                               <v-container>
                                 <v-row>
                                   <v-col cols="12">
-                                    <v-text-field v-model="name" label = "Nombre completo" filled> </v-text-field>
+                                    <v-text-field v-model="name" label = "Nombre completo" filled > </v-text-field>
                                   </v-col>
                                 </v-row>
                                 <v-row>
@@ -88,6 +130,16 @@
                                   <v-col cols="12" sm="6" md="6">
                                     <v-text-field v-model="identification" label = "Cédula" type="number" min="0" filled> </v-text-field>
                                   </v-col>
+                                </v-row>
+                                <v-row>
+                                  <v-combobox
+                                    v-model="position"
+                                    :items="items"
+                                    label="position"
+                                    dense
+                                    filled
+                                    clearable
+                                  ></v-combobox>
                                 </v-row>
 
                               </v-container>
@@ -134,12 +186,19 @@ export default {
        users: [],
        dialog: false,
        editDialog: false,
+       dialogDelete: false,
        id: '',
        name: '',
        email: '',
        password: '',
        phone: '',
-       identification: ''
+       identification: '',
+       position:[],
+       items:[
+         'Administrador',
+         'Arquitecto',
+         'Obrero',
+       ],
      }
    },
    methods:{
@@ -159,11 +218,16 @@ export default {
           "email" : this.email,
           "password": this.password,
           "phone": this.phone,
-          "identification": this.identification
+          "identification": this.identification,
+          "position": this.position
         };
         axios.put('http://localhost:4000/users/' + this.id, json);
         this.closeDialogs();
 
+    },
+    deleteUser(){
+        axios.delete('http://localhost:4000/users/'+ this.id);
+        this.closeDialogs();
     },
     openEditDialog(user){
         this.id = user.id
@@ -173,10 +237,19 @@ export default {
         this.password = user.password;
         this.phone = user.phone;
         this.identification = user.identification;
+        this.position = user.position;
+    },
+    openDeleteDialog(user){
+        this.id = user.id
+        this.dialogDelete = true;
+        this.name = user.name;
+        this.identification = user.identification;
+        this.position = user.position;
     },
     closeDialogs(){
         this.editDialog = false;
         this.dialog = false;
+        this.dialogDelete = false;
     }
    },
     beforeMount(){

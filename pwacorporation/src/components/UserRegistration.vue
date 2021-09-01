@@ -34,6 +34,16 @@
                 <v-text-field v-model="identification" label = "Cédula" type="number" min="0" filled> </v-text-field>
             </v-col>
             </v-row>
+            <v-row>
+            <v-combobox
+                v-model="position"
+                :items="items"
+                label="position"
+                dense
+                filled
+                clearable
+            ></v-combobox>
+            </v-row>
 
         </v-container>
         </v-card-text>
@@ -71,7 +81,13 @@ export default {
        email: '',
        password: '',
        phone: '',
-       identification: ''
+       identification: '',
+       position:[],
+       items:[
+         'Administrador',
+         'Arquitecto',
+         'Obrero',
+       ],
      }
    },
    methods:{
@@ -81,7 +97,8 @@ export default {
           "email" : this.email,
           "password": this.password,
           "phone": this.phone,
-          "identification": this.identification
+          "identification": this.identification,
+          "position": this.position
         };
         axios.post('http://localhost:4000/users', json);
         this.closeDialogs();
@@ -92,6 +109,7 @@ export default {
         this.password = "";
         this.phone = "";
         this.identification = "";
+        this.position = "";
         this.$emit('closeDialogs')
     }
    },
