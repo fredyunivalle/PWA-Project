@@ -96,6 +96,8 @@ export default {
      return{
        images: [],
        audios: [],
+       encargado:[],
+       users:[],
        name: this.taskInfo.name,
        description: this.taskInfo.description,
        completed: this.taskInfo.completed,
@@ -105,7 +107,7 @@ export default {
        selectedFile: null
      }
    },
-   
+
    methods:{
     fetchImages() {
       axios.get("http://localhost:4000/projects/tasks/images/" + this.taskId).then(

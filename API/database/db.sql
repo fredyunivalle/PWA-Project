@@ -26,7 +26,7 @@ CREATE TABLE Projects(
     pk_project_id SERIAL PRIMARY KEY,
     name VARCHAR(40),
     description TEXT,
-    personInCharge int
+    personInCharge INT
 );
 
 CREATE TABLE Tasks(

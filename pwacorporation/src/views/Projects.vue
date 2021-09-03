@@ -29,6 +29,9 @@
                       </template>
                         </v-list-item>
                       </v-col>
+
+                      <project-registration v-model="dialog" @closeDialogs = "closeDialogs"> </project-registration>
+
                       <template>
                         <v-btn
                         color="blue"
@@ -38,7 +41,7 @@
                         absolute
                         bottom
                         right
-                        @click="addProject"
+                        @click="dialog = true"
                         >
                         <v-icon>mdi-plus</v-icon>
                         </v-btn>
@@ -57,9 +60,10 @@
 <script>
 import axios from 'axios';
 import ProjectCard from '../components/ProjectCard.vue';
+import ProjectRegistration from '../components/ProjectRegistration.vue';
 
 export default {
-  components: { ProjectCard },
+  components: { ProjectCard, ProjectRegistration },
    name: 'Projects',
    data(){
      return{
@@ -104,7 +108,11 @@ export default {
           console.log(error);
         }
       );
-    }
+    },
+    closeDialogs(){
+      this.dialog = false;
+      this.editDialog = false;
+    },
    },
    beforeMount(){
       this.fetchProjects();
