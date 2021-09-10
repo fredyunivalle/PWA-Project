@@ -12,26 +12,36 @@
         <v-container>
             <v-row>
             <v-col cols="12">
-                <v-text-field v-model="name" label = "Nombre completo" filled> </v-text-field>
+                <v-text-field v-model="userData.name" label = "Nombre completo" filled> </v-text-field>
             </v-col>
             </v-row>
             <v-row>
             <v-col cols="12">
-                <v-text-field v-model="email" label = "Email" filled> </v-text-field>
+                <v-text-field v-model="userData.email" label = "Email" filled> </v-text-field>
             </v-col>
             </v-row>
             <v-row>
             <v-col cols="12">
-                <v-text-field v-model="password" label = "Contraseña" type = "password" filled> </v-text-field>
+                <v-text-field v-model="userData.password" label = "Contraseña" type = "password" filled> </v-text-field>
             </v-col>
             </v-row>
             <v-row>
             <v-col cols="12" sm="6" md="6">
-                <v-text-field v-model="phone" label = "Teléfono" type="number" min="0" filled> </v-text-field>
+                <v-text-field v-model="userData.phone" label = "Teléfono" type="number" min="0" filled> </v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="6">
-                <v-text-field v-model="identification" label = "Cédula" type="number" min="0" filled> </v-text-field>
+                <v-text-field v-model="userData.identification" label = "Cédula" type="number" min="0" filled> </v-text-field>
             </v-col>
+            </v-row>
+            <v-row>
+            <v-combobox
+                v-model="userData.position"
+                :items="items"
+                label="Posición"
+                dense
+                filled
+                clearable
+            ></v-combobox>
             </v-row>
 
         </v-container>
@@ -61,37 +71,33 @@
 import axios from 'axios';
 export default {
    name: 'UserEdit',
-   props:['value'],
+   props:['value', 'userData'],
    data(){
      return{
-       id: '',
-       name: '',
-       email: '',
-       password: '',
-       phone: '',
-       identification: ''
+         items:[
+         'Administrador',
+         'Arquitecto',
+         'Obrero',
+       ],
      }
    },
    methods:{
-    register(){
+    editUser(){
         let json = {
-          "name" : this.name,  
-          "email" : this.email,
-          "password": this.password,
-          "phone": this.phone,
-          "identification": this.identification
+          "name" : this.userData.name,  
+          "email" : this.userData.email,
+          "password": this.userData.password,
+          "phone": this.userData.phone,
+          "identification": this.userData.identification,
+          "position": this.userData.position
         };
-        axios.post('http://localhost:4000/users', json);
+        console.log(json);
+        axios.put('http://localhost:4000/users/' + this.userData.id, json);
         this.closeDialogs();
     },
     closeDialogs(){
-        this.name = "";
-        this.email = "";
-        this.password = "";
-        this.phone = "";
-        this.identification = "";
         this.$emit('closeDialogs')
-    }
+    },
    },
 }
 </script>

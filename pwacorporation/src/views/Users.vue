@@ -44,6 +44,7 @@
                         </v-simple-table>
                        
                        <user-registration v-model="dialog" @closeDialogs = "closeDialogs"> </user-registration>
+                       
 
                        <template>
                             <v-btn
@@ -61,109 +62,10 @@
                          </template>
 
 
-                  <template>
-                    <v-row justify="center">
-                      <v-dialog
-                        v-model="dialogDelete"
-                        persistent
-                        max-width="290"
-                      >
-                      <v-card>
-                        <v-card-title class="text-h5">
-                          ¿Desea eliminar este usuario?
-                        </v-card-title>
-                        <v-text-field v-model="name"  filled disabled> </v-text-field>
-                        <v-card-text>Una vez eliminado el usuario no podrá recuperarse la informacion</v-card-text>
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                              <v-btn
-                                color="green darken-1"
-                                text
-                                @click="closeDialogs"
-                              >
-                                Cancelar
-                              </v-btn>
-                              <v-btn
-                                color="green darken-1"
-                                text
-                                @click="deleteUser"
-                              >
-                                Seguir
-                              </v-btn>
-                          </v-card-actions>
-                      </v-card>
-                      </v-dialog>
-                    </v-row>
-                  </template>
+                  
 
-                       <template>
-                         <v-dialog
-                          v-model="editDialog"
-                          max-width="700px"
-                          persistent
-                         >
-                          <v-card>
-                            <v-card-title>
-                              <span class="text-h5"> Editar usuario</span>
-                            </v-card-title>
-                            <v-card-text>
-                              <v-container>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <v-text-field v-model="name" label = "Nombre completo" filled > </v-text-field>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <v-text-field v-model="email" label = "Email" filled> </v-text-field>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <v-text-field v-model="password" label = "Contraseña" type = "password" filled> </v-text-field>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-col cols="12" sm="6" md="6">
-                                    <v-text-field v-model="phone" label = "Teléfono" type="number" min="0" filled> </v-text-field>
-                                  </v-col>
-                                  <v-col cols="12" sm="6" md="6">
-                                    <v-text-field v-model="identification" label = "Cédula" type="number" min="0" filled> </v-text-field>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-combobox
-                                    v-model="position"
-                                    :items="items"
-                                    label="position"
-                                    dense
-                                    filled
-                                    clearable
-                                  ></v-combobox>
-                                </v-row>
-
-                              </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="closeDialogs"
-                              >
-                                Cerrar
-                              </v-btn>
-                              <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="editUser"
-                              >
-                                Guardar
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                         </v-dialog>
-                       </template>
+                       <user-edit v-model="editDialog" @closeDialogs = "closeDialogs" :userData="currentUser"></user-edit>
+                       <user-delete-panel v-model="dialogDelete" @closeDialogs = "closeDialogs" :userData="currentUser"></user-delete-panel>
                         
                      </v-card-text>
                     </v-card>
@@ -178,27 +80,18 @@
 <script>
 import axios from 'axios';
 import UserRegistration from '../components/UserRegistration.vue';
+import UserEdit from '../components/UserEdit.vue';
+import UserDeletePanel from '../components/UserDeletePanel.vue';
 export default {
-  components: { UserRegistration },
+  components: { UserRegistration, UserEdit, UserDeletePanel },
    name: 'Users',
    data(){
      return{
+       currentUser: '',
        users: [],
        dialog: false,
        editDialog: false,
        dialogDelete: false,
-       id: '',
-       name: '',
-       email: '',
-       password: '',
-       phone: '',
-       identification: '',
-       position:[],
-       items:[
-         'Administrador',
-         'Arquitecto',
-         'Obrero',
-       ],
      }
    },
    methods:{
@@ -212,44 +105,23 @@ export default {
         }
       );
     },
-    editUser(){
-        let json = {
-          "name" : this.name,  
-          "email" : this.email,
-          "password": this.password,
-          "phone": this.phone,
-          "identification": this.identification,
-          "position": this.position
-        };
-        axios.put('http://localhost:4000/users/' + this.id, json);
-        this.closeDialogs();
-
-    },
     deleteUser(){
         axios.delete('http://localhost:4000/users/'+ this.id);
         this.closeDialogs();
     },
     openEditDialog(user){
-        this.id = user.id
-        this.editDialog = true;
-        this.name = user.name;
-        this.email = user.email;
-        this.password = user.password;
-        this.phone = user.phone;
-        this.identification = user.identification;
-        this.position = user.position;
+      this.editDialog = true;
+      this.currentUser = user;
     },
     openDeleteDialog(user){
-        this.id = user.id
         this.dialogDelete = true;
-        this.name = user.name;
-        this.identification = user.identification;
-        this.position = user.position;
+        this.currentUser = user;
     },
     closeDialogs(){
         this.editDialog = false;
         this.dialog = false;
         this.dialogDelete = false;
+        this.fetchUsers();
     }
    },
     beforeMount(){

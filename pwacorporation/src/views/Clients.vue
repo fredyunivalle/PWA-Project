@@ -30,7 +30,7 @@
                                 >
                                 <td>{{ client.name }}</td>
                                 <td>{{ client.email }}</td>
-                                <td><v-btn @click="openEditDialog(client)">
+                                <td><v-btn @click="openEditNaturalDialog(client)">
                                  <v-icon>mdi-pencil</v-icon>
                                </v-btn></td>
                                 </tr>
@@ -56,56 +56,7 @@
                          </template>
 
 
-                       <template>
-                         <v-dialog
-                          v-model="editDialog"
-                          max-width="700px"
-                          persistent
-                         >
-                          <v-card>
-                            <v-card-title>
-                              <span class="text-h5"> Editar cliente</span>
-                            </v-card-title>
-                            <v-card-text>
-                              <v-container>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <v-text-field v-model="name" label = "Nombre completo" filled> </v-text-field>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <v-text-field v-model="email" label = "Email" filled> </v-text-field>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <v-text-field v-model="phone" label = "Teléfono" type="number" min="0" filled> </v-text-field>
-                                  </v-col>
-                                </v-row>
-
-                              </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="closeDialogs"
-                              >
-                                Cerrar
-                              </v-btn>
-                              <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="editClient"
-                              >
-                                Guardar
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                         </v-dialog>
-                       </template>
+                       <clients-edit type = "Natural" v-model="editNaturalDialog" @closeDialogs = "closeDialogs" :clientData="currentClient"></clients-edit>
                         
                      </v-card-text>
                     </v-card>
@@ -141,7 +92,7 @@
                                 >
                                 <td>{{ client.name }}</td>
                                 <td>{{ client.email }}</td>
-                                <td><v-btn @click="openEditDialog(client)">
+                                <td><v-btn @click="openEditLegalDialog(client)">
                                  <v-icon>mdi-pencil</v-icon>
                                </v-btn></td>
                                 </tr>
@@ -167,56 +118,7 @@
                          </template>
 
 
-                       <template>
-                         <v-dialog
-                          v-model="editDialog"
-                          max-width="700px"
-                          persistent
-                         >
-                          <v-card>
-                            <v-card-title>
-                              <span class="text-h5"> Editar cliente</span>
-                            </v-card-title>
-                            <v-card-text>
-                              <v-container>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <v-text-field v-model="name" label = "Nombre completo" filled> </v-text-field>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <v-text-field v-model="email" label = "Email" filled> </v-text-field>
-                                  </v-col>
-                                </v-row>
-                                <v-row>
-                                  <v-col cols="12">
-                                    <v-text-field v-model="phone" label = "Teléfono" type="number" min="0" filled> </v-text-field>
-                                  </v-col>
-                                </v-row>
-
-                              </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="closeDialogs"
-                              >
-                                Cerrar
-                              </v-btn>
-                              <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="editClient"
-                              >
-                                Guardar
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                         </v-dialog>
-                       </template>
+                       <clients-edit type = "Legal" v-model="editLegalDialog" @closeDialogs = "closeDialogs" :clientData="currentClient"></clients-edit>
                         
                      </v-card-text>
                     </v-card>
@@ -232,8 +134,9 @@
 <script>
 import axios from 'axios';
 import ClientRegistration from '../components/ClientRegistration.vue';
+import ClientsEdit from '../components/ClientsEdit.vue';
 export default {
-  components: { ClientRegistration},
+  components: { ClientRegistration, ClientsEdit},
    name: 'Clients',
    data(){
      return{
@@ -241,13 +144,9 @@ export default {
        legalClients: [],
        dialogNatural: false,
        dialogLegal: false,
-       editDialog: false,
-       id: '',
-       specificId: '',
-       name: '',
-       email: '',
-       phone: '',
-       identification: '',
+       editNaturalDialog: false,
+       editLegalDialog: false,
+       currentClient: ""
      }
    },
    methods:{
@@ -271,28 +170,19 @@ export default {
         }
       );
     },
-    editClient(){
-        let json = {
-          "name" : this.name,  
-          "email" : this.email,
-          "phone": this.phone,
-          "identification": this.identification
-        };
-        axios.put('http://localhost:4000/clients/' + this.id, json);
-        this.closeDialogs();
 
+    openEditNaturalDialog(client){
+        this.currentClient = client
+        this.editNaturalDialog = true;
     },
-    openEditDialog(client){
-        this.id = client.id
-        this.editDialog = true;
-        this.name = client.name;
-        this.email = client.email;
-        this.phone = client.phone;
+    openEditLegalDialog(client){
+        this.currentClient = client
+        this.editLegalDialog = true;
     },
     closeDialogs(){
-        this.editDialogNatural = false;
+        this.editNaturalDialog = false;
         this.dialogNatural = false;
-        this.editDialogLegal = false;
+        this.editLegalDialog = false;
         this.dialogLegal = false;
     }
    },
