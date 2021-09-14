@@ -68,7 +68,7 @@ export default {
           "identification": this.clientData.identification,
           "type": this.type
         };
-        axios.post('http://localhost:4000/clients/'  + this.clientData.pk_client_id, json);
+        axios.put('http://localhost:4000/clients/'  + this.clientData.pk_client_id, json);
         this.closeDialogs();
     },
     closeDialogs(){

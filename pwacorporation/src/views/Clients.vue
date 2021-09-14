@@ -184,6 +184,8 @@ export default {
         this.dialogNatural = false;
         this.editLegalDialog = false;
         this.dialogLegal = false;
+        this.fetchNaturalClients();
+        this.fetchLegalClients();
     }
    },
     beforeMount(){
