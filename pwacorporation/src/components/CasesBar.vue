@@ -20,8 +20,8 @@ export default {
         labels: this.label,
         datasets: [
         {
-            label: 'CASES',
-            backgroundColor: 'rgba(144,238,144 , 0.9 )',
+            label: 'Cantidades',
+            backgroundColor: 'rgb(103, 187, 210)',
             data: this.chartData,
         }
         ]
