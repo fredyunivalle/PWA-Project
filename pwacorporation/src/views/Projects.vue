@@ -69,13 +69,6 @@ export default {
      return{
        projects: [],
        dialog: false,
-       editDialog: false,
-       id: '',
-       name: '',
-       email: '',
-       password: '',
-       phone: '',
-       identification: ''
      }
    },
    methods:{
@@ -93,7 +86,9 @@ export default {
       let json = {
           "name" : "Nuevo proyecto",  
           "description" : "",
-          "personInCharge": 1
+          "personInCharge": 1,
+          "longitude": 0.0,
+          "latitude" : 0.0
         };
         axios.post("http://localhost:4000/projects", json);
         this.fetchProjects();
